@@ -1,6 +1,6 @@
 ## Introduction
 
-The American Community Survey managed by the U.S. Census Bureau produces a wealth of information that is commonly called upon to make data-informed decisions within Pierce County. However, accessing this information can be challenging. This primer covers at a high level the types of tables, year coverage, and geographies of some of the more popular data products. It then documents a Census API wrapper produced in-house, as well as points to external API wrappers.
+The American Community Survey managed by the U.S. Census Bureau produces a wealth of information that is commonly called upon by jurisdictions to make data-informed decisions. However, accessing this information can be challenging. This primer covers at a high level the types of tables, year coverage, and geographies of some of the more popular data products. It then documents an API wrapper produced for Pierce County's Research and Data Analyst Team, as well as points to external API wrapper. The focus of this code and readme was and is to get an internal team at Pierce County set up to quickly and efficiently pull frequently used data products. 
 
 ## Tables
 
@@ -30,24 +30,24 @@ Each table may cover a different time span, require several years of data to pro
 
 ## How to find the table(s) and variable(s) you want
 
-The API landing page for all types of tables can be found [here](https://www.census.gov/data/developers/data-sets/acs-5year.html), though we will try to break this page down into each of the three types of tables.
+The Census maintained API information landing page for all types of tables can be found [here](https://www.census.gov/data/developers/data-sets/acs-5year.html), though we will try to break this page down into each of the three types of tables.
 
 **Data Profiles**
 
-Again the easiest way to tell if the data you are looking for is in the ACS is to start with the [Data Profiles](https://www.census.gov/acs/www/data/data-tables-and-tools/data-profiles/). There are four tables in the Data profiles: Social characteristics (table number DP02), Economic Characteristics (DP03), Housing Characteristics (DP04), and Demographic Characteristics (DP05), what and where DP01 is, is anyone's guess. If you see the variable you are interested in, then you need to find its variable code name, these codes are what are used to pull the data from the API. For example, the variable for the count of people over 16 employed in the civilian labor force is DP03\_0004E. Here DP03 is the table, 004 is the variable, and E indicates that it is the estimate (other types include PE = Percent Estimate, M=Margin of error, or PM = Percent Margin of Error). For the variable names of all data products described here everything before the first "\_" is the table name. 
+The easiest way to tell if the data you are looking for is in the ACS is to start with the [Data Profiles](https://www.census.gov/acs/www/data/data-tables-and-tools/data-profiles/). There are four tables in the Data profiles: Social characteristics (table number DP02), Economic Characteristics (DP03), Housing Characteristics (DP04), and Demographic Characteristics (DP05), what and where DP01 is, is anyone's guess. If you see the variable you are interested in, then you need to find its variable code name, these codes are what are used to pull the data from the API. For example, the variable for the count of people over 16 employed in the civilian labor force is DP03\_0004E. Here DP03 is the table, 004 is the variable, and E indicates that it is the estimate (other types include PE = Percent Estimate, M=Margin of error, or PM = Percent Margin of Error). For the variable names of all data products described here everything before the first "\_" is the table name. 
 
 The link below contains the list of all of the variables used across the four data profile tables for year 2021 and using the 5-year estimates. Note that the "acs5" can be changed to "acs1" and the year (in this case 2021) can be changed to any year between 2009 and the most recent available year (currently 2021).
 
 - [https://api.census.gov/data/2021/acs/acs5/profile/variables.html](https://api.census.gov/data/2021/acs/acs5/profile/variables.html)
 
-The descriptions in the above link are a little daunting, but are systematic and will make sense once we look at our specific example, DP03_004E. Below is a screen shot of the description, and below that is the Census Bureau's online table representation of DP03.
+The descriptions in the above link are a little daunting, but are systematic and will make sense once we look at a specific example, DP03_004E. Below is a screen shot of the description, and below that is the Census Bureau's online table representation of DP03.
 
 
 ![Scheme](CensusVariableDescription.png)
 
 ![Scheme](CensusDataTableExample.png)
 
-In light of this, the descriptions of the variables begin to make a bit more sense. We can understand the !! values to indicate nesting. Thus, DP03_004E is the count of employed people, considered to be in the civilian labor force, where the civilian labor force is nested under the total labor force, and where that labor force total is only for people 16 and older. It is a bit easier to start the other way though: among folks 16 years and older in the labor force, specifically the civilian labor force, DP03\_0004E is the employed count.
+In light of this, the descriptions of the variables begins to make a bit more sense. We can understand the !! values to indicate nesting. Thus, DP03_004E is the count of employed people, considered to be in the civilian labor force, where the civilian labor force is nested under the total labor force, and where that labor force total is only for people 16 and older. It is a bit easier to start the other way though: among folks 16 years and older in the labor force, specifically the civilian labor force, DP03\_0004E is the employed count.
 
 One very important thing to note is that every so often the ACS adds, removes, or slightly changes variable definitions. For this reason, it is imperative to look at the list of variables from the year you are interested in. This is done by just changing the year in the URL provided above.
 
@@ -78,7 +78,7 @@ I will be blunt, finding variables in the Detailed Tables is a pain. The quickes
 
 ## How to use the in-house API wrapper
 
-The in-house API wrapper for the American Communities Survey data is a class called ACS contained within the AmericanCommunitiesSurvey.py script. At a minimum, to use the class the user needs to supply the year, the ACS versions (1 or 5-year estimates), the year, and the desired variables or tables. There is one main function within this class, the "call" function. Let's see an example of how this class works.      
+The in-house API wrapper for the American Communities Survey data is a class called ACS contained within the AmericanCommunitiesSurvey.py script. At a minimum, to use the class the user needs to supply the year, the ACS versions (1 or 5-year estimates), the year, and the desired variables or tables. There is one main user-focused function within this class, the "**call**" function. Let's see an example of how this class works.      
 
 <p><br/></p>
 
@@ -92,7 +92,7 @@ mydata.to_csv(".\THEFILEIWANTTOUSEINR.csv")
 
 That's it, we are done! Congratulations, you just pulled DP04\_0005E for all states in the country, whatever that is. For those of you new to Python, we can summarize the first three lines pretty quickly. The first line tells our script to find the file AmericanCommunitiesSurvey.py and load in the class object called ACS (this code assumes the AmericanCommunitiesSurvey.py file is in the same folder as the script we just wrote). The second line pulls in a package included within the base installation, so no need to download it. The third line creates a specific ACS class object and passes it our Census API key (you fill in the Xs of course). To be clear, most of the time you don't actually need this cen\_key argument and you could easily just write classinstance=ACS(). You only need an API key if you plan on making many, many calls to the API.
 
-The fourth line is the tofu and potatoes. Here we are telling the wrapper we want our data at the state level from the 2020 year using the ACS 5-year estimates. The last line just writes our data frame to a csv. There are a few more optional arguments not shown here, so lets dive into some more formal documentation.
+In the fourth line we are telling the wrapper we want our data at the state level from the 2020 year using the ACS 5-year estimates. The last line just writes our data frame to a csv. There are a few more optional arguments not shown here, so lets dive into some more formal documentation.
 
 **Instantiation**
 
