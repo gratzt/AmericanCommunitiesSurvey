@@ -1,6 +1,6 @@
 ## Introduction
 
-The American Community Survey managed by the U.S. Census Bureau produces a wealth of information that is commonly called upon by jurisdictions to make data-informed decisions. However, accessing this information can be challenging. This primer covers at a high level the types of tables, year coverage, and geographies of some of the more popular data products. It then documents an API wrapper produced for Pierce County's Research and Data Analyst Team, as well as points to external API wrapper. The focus of this code and readme was and is to get an internal team at Pierce County set up to quickly and efficiently pull frequently used data products. 
+The American Community Survey managed by the U.S. Census Bureau produces a wealth of information that is commonly called upon by jurisdictions to make data-informed decisions. However, accessing this information can be challenging. This primer covers at a high level the types of tables, year coverage, and geographies of some of the more popular data products. It then documents an API wrapper produced for Pierce County's Research and Data Analyst Team. The focus of this code and readme was and is to get an internal team at Pierce County set up to quickly and efficiently pull frequently used data products. 
 
 ## Tables
 
@@ -164,14 +164,6 @@ e7 = ACS().call(geography='county', year='2020', acsversion='5',
                 variables = ['DP02', 'B03002', 'S0101'], county='*', state = '53')  
 ```
 <p><br/></p>
-## Alternatives and more well maintained, but with less personal service**  **😊**** , APIs
-
-- Python
-  - [https://pypi.org/project/census/](https://pypi.org/project/census/)
-  - [https://github.com/Census-ACS/cenpy](https://github.com/Census-ACS/cenpy)
-- R
-  - [https://github.com/Census-ACS/tidycensus](https://github.com/Census-ACS/tidycensus)
-  - https://github.com/Census-ACS/censusapi
 
 ## Miscelanous Notes  
 * Survey sample sizes are available for households in B98001 and for total individuals in B98003.
